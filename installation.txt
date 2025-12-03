@@ -1,0 +1,238 @@
+# Unsloth Complete Installation Guide for New Laptop
+
+## System Requirements
+- Windows 10/11
+- NVIDIA GPU with CUDA support
+- At least 16GB RAM recommended
+- 20GB+ free disk space
+
+---
+
+## Step 1: Check Python Version
+
+First, check what Python versions you have installed:
+
+```bash
+py --list
+```
+
+**IMPORTANT:** Unsloth requires Python 3.9 to 3.13 (NOT 3.14)
+
+If you see Python 3.14, you need to use Python 3.13 instead.
+
+---
+
+## Step 2: Set Python 3.13 as Default (if needed)
+
+If you have Python 3.14, switch to 3.13:
+
+```bash
+# Check current version
+python --version
+
+# If it shows 3.14, use py launcher to set 3.13
+py -3.13
+```
+
+To make Python 3.13 default, you can:
+1. Go to Windows Settings > Apps > App execution aliases
+2. Turn OFF Python 3.14
+3. Keep Python 3.13 ON
+
+Or add Python 3.13 to PATH manually:
+- Right-click "This PC" > Properties > Advanced System Settings
+- Environment Variables > System Variables > Path
+- Move Python 3.13 path to the top
+
+---
+
+## Step 3: Upgrade pip
+
+```bash
+python.exe -m pip install --upgrade pip
+```
+
+---
+
+## Step 4: Install PyTorch with CUDA Support
+
+**CRITICAL:** Install PyTorch BEFORE Unsloth
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+This will download about 2.8GB, so be patient.
+
+---
+
+## Step 5: Verify CUDA Installation
+
+```bash
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+python -c "import torch; print(f'CUDA version: {torch.version.cuda}')"
+python -c "import torch; print(f'GPU Name: {torch.cuda.get_device_name(0)}')"
+```
+
+You should see:
+- `CUDA available: True`
+- `CUDA version: 11.8` (or similar)
+- Your GPU name
+
+---
+
+## Step 6: Install Unsloth
+
+```bash
+pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+```
+
+This will take several minutes and install many dependencies.
+
+---
+
+## Step 7: Install Additional Dependencies (if needed)
+
+If you get missing dependency errors, install these:
+
+```bash
+pip install --no-deps trl peft accelerate bitsandbytes datasets
+```
+
+---
+
+## Step 8: Verify Unsloth Installation
+
+```bash
+python -c "import unsloth; print('Unsloth installed successfully!')"
+```
+
+---
+
+## Step 9: Test Complete Setup
+
+Create a test file called `test_unsloth.py`:
+
+```python
+import torch
+import unsloth
+
+print("=" * 50)
+print("SYSTEM CHECK")
+print("=" * 50)
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"CUDA version: {torch.version.cuda}")
+    print(f"GPU: {torch.cuda.get_device_name(0)}")
+    print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
+print(f"Unsloth installed: ✓")
+print("=" * 50)
+print("All systems ready!")
+```
+
+Run it:
+
+```bash
+python test_unsloth.py
+```
+
+---
+
+## Troubleshooting
+
+### Problem: "Package 'unsloth' requires a different Python"
+**Solution:** You're using Python 3.14. Switch to Python 3.13 (see Step 2)
+
+### Problem: "CUDA available: False"
+**Solution:** 
+1. Make sure you have an NVIDIA GPU
+2. Install NVIDIA drivers from nvidia.com
+3. Reinstall PyTorch with CUDA: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
+
+### Problem: "ModuleNotFoundError: No module named 'unsloth'"
+**Solution:** 
+1. Make sure you're using the correct Python version
+2. Reinstall: `pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"`
+
+### Problem: Missing dependencies errors
+**Solution:** 
+```bash
+pip install accelerate transformers datasets trl peft bitsandbytes
+```
+
+---
+
+## Complete Command List (Copy-Paste Ready)
+
+```bash
+# 1. Check Python version
+py --list
+python --version
+
+# 2. Upgrade pip
+python.exe -m pip install --upgrade pip
+
+# 3. Install PyTorch with CUDA
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# 4. Verify CUDA
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+
+# 5. Install Unsloth
+pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+
+# 6. Verify Unsloth
+python -c "import unsloth; print('Unsloth installed successfully!')"
+```
+
+---
+
+## Additional Useful Packages
+
+```bash
+# For Jupyter notebooks
+pip install jupyter notebook ipywidgets
+
+# For data science
+pip install pandas numpy matplotlib seaborn
+
+# For progress bars and utilities
+pip install tqdm rich
+```
+
+---
+
+## Notes
+
+- **Installation time:** 15-30 minutes depending on internet speed
+- **Total download size:** ~3-4 GB
+- **Disk space needed:** ~10-15 GB after installation
+- **Python version:** Must be 3.9-3.13 (NOT 3.14)
+- **GPU:** NVIDIA GPU with CUDA support required for optimal performance
+
+---
+
+## Quick Reference Card
+
+| Command | Purpose |
+|---------|---------|
+| `python --version` | Check Python version |
+| `pip list` | See installed packages |
+| `pip show unsloth` | Check Unsloth details |
+| `nvidia-smi` | Check GPU status |
+| `py --list` | List all Python versions |
+
+---
+
+## Support & Resources
+
+- Unsloth GitHub: https://github.com/unslothai/unsloth
+- Unsloth Documentation: https://docs.unsloth.ai
+- PyTorch Installation: https://pytorch.org/get-started/locally/
+- CUDA Toolkit: https://developer.nvidia.com/cuda-downloads
+
+---
+
+**Last Updated:** December 2024
+**Tested On:** Windows 11, Python 3.13, CUDA 11.8
