@@ -16,3 +16,8 @@ numpy
 pandas
 python-dotenv
 werkzeug
+flask==3.0.0
+flask-cors==4.0.0
+python-dotenv==1.0.0
+werkzeug==3.0.0
+requests==2.32.5

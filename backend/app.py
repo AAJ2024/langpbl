@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 import train
 import inference
 import config
+import database
 
 app = Flask(__name__)
 CORS(app)
@@ -183,6 +184,7 @@ def chat():
         message = data['message']
         max_tokens = data.get('max_tokens', 256)
         temperature = data.get('temperature', 0.7)
+        session_id = data.get('session_id', None)
         
         model_path = os.path.join(config.MODEL_PATH, model_id)
         if not os.path.exists(model_path):
@@ -193,6 +195,14 @@ def chat():
             prompt=message,
             max_tokens=max_tokens,
             temperature=temperature
+        )
+        
+        # 🔥 SAVE CONVERSATION TO DATABASE
+        database.save_conversation(
+            user_message=message,
+            ai_response=response_text,
+            model_id=model_id,
+            session_id=session_id
         )
         
         return jsonify({
@@ -244,12 +254,79 @@ def get_base_models():
     ]
     return jsonify({'models': base_models})
 
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    try:
+        stats = database.get_conversation_stats()
+        return jsonify(stats)
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/retrain', methods=['POST'])
+def trigger_retrain():
+    try:
+        data = request.get_json()
+        model_id = data.get('model_id')
+        
+        if not model_id:
+            return jsonify({'success': False, 'error': 'model_id required'}), 400
+        
+        # Export conversations as training data
+        training_file = database.export_training_data()
+        
+        # Start training in background
+        training_id = f"retrain_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        training_status[training_id] = {
+            'status': 'initializing',
+            'progress': 0,
+            'current_step': 0,
+            'total_steps': 50,
+            'loss': None,
+            'started_at': datetime.now().isoformat()
+        }
+        
+        def run_retraining():
+            try:
+                # Train with new conversations
+                train.train_model(
+                    data_path=training_file,
+                    model_name='unsloth/llama-3-8b-bnb-4bit',
+                    output_dir=os.path.join(config.MODEL_PATH, model_id),
+                    max_steps=50,
+                    learning_rate=2e-4,
+                    batch_size=1,
+                    training_id=training_id,
+                    status_dict=training_status
+                )
+                
+                # Mark conversations as trained
+                database.mark_conversations_trained()
+                
+            except Exception as e:
+                training_status[training_id]['status'] = 'failed'
+                training_status[training_id]['error'] = str(e)
+        
+        thread = threading.Thread(target=run_retraining)
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'training_id': training_id,
+            'message': 'Retraining started with new conversations'
+        })
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 if __name__ == '__main__':
     os.makedirs(config.DATA_PATH, exist_ok=True)
     os.makedirs(config.MODEL_PATH, exist_ok=True)
     os.makedirs(config.CHECKPOINT_PATH, exist_ok=True)
+    os.makedirs(os.path.join('data', 'auto_generated'), exist_ok=True)
     
     print("🚀 Starting Unsloth Web API...")
     print(f"📁 Data: {config.DATA_PATH}")
     print(f"🤖 Models: {config.MODEL_PATH}")
+    print(f"💾 Database: conversations.db")
     app.run(debug=True, host='0.0.0.0', port=5000)
