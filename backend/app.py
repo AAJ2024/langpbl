@@ -9,7 +9,8 @@ import train
 import inference
 import config
 import database
-
+import financial_advisor
+import location_handler
 app = Flask(__name__)
 CORS(app)
 
@@ -319,6 +320,69 @@ def trigger_retrain():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+
+@app.route('/api/financial-advice', methods=['POST'])
+def get_financial_advice():
+    """Generate financial advice with location-specific resources"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['age', 'income', 'debt', 'savings', 'city', 'state', 'goals', 'model_id']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'success': False, 'error': f'Missing field: {field}'}), 400
+        
+        model_id = data['model_id']
+        model_path = os.path.join(config.MODEL_PATH, model_id)
+        
+        if not os.path.exists(model_path):
+            return jsonify({'success': False, 'error': 'Model not found'}), 404
+        
+        # Create financial advice prompt
+        prompt = financial_advisor.create_financial_prompt(data)
+        
+        # Get AI response
+        ai_response = inference.generate_response(
+            model_path=model_path,
+            prompt=prompt,
+            max_tokens=512,
+            temperature=0.7
+        )
+        
+        # Enhance with location-specific resources
+        enhanced_response = financial_advisor.enhance_with_location(
+            ai_response,
+            data['city'],
+            data['state']
+        )
+        
+        # Save to database
+        database.save_conversation(
+            user_message=f"Financial advice request: Age {data['age']}, Income ${data['income']}, Location: {data['city']}, {data['state']}",
+            ai_response=enhanced_response,
+            model_id=model_id,
+            session_id=data.get('session_id')
+        )
+        
+        return jsonify({
+            'success': True,
+            'advice': enhanced_response,
+            'timestamp': datetime.now().isoformat()
+        })
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/available-locations', methods=['GET'])
+def available_locations():
+    """Get list of supported locations"""
+    try:
+        locations = location_handler.get_available_locations()
+        return jsonify({'locations': locations})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+    
 if __name__ == '__main__':
     os.makedirs(config.DATA_PATH, exist_ok=True)
     os.makedirs(config.MODEL_PATH, exist_ok=True)

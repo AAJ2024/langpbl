@@ -5,7 +5,7 @@ import os
 data_path = "training_data.json"
 
 # Model configuration
-model_name = "unsloth/llama-3-8b-bnb-4bit"
+model_name = "unsloth/Qwen2.5-0.5B-Instruct"  # ← Much smaller - 500M params
 output_dir = "models/my-pretrained-model"
 max_steps = 60
 learning_rate = 2e-4

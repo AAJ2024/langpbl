@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LearningAI from './components/LearningAI';
+import FinancialAdvisor from './components/FinancialAdvisor';
 import axios from 'axios';
 import './App.css';
 
@@ -7,6 +8,7 @@ function App() {
   const [models, setModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentView, setCurrentView] = useState('chat'); // 'chat' or 'financial'
 
   useEffect(() => {
     fetchModels();
@@ -84,13 +86,32 @@ function App() {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-brand">
-            <span className="brand-text">🧠 Continuously Learning AI</span>
+            <span className="brand-text">🧠 AI Financial Assistant</span>
+          </div>
+          <div className="nav-buttons">
+            <button
+              onClick={() => setCurrentView('chat')}
+              className={currentView === 'chat' ? 'nav-btn active' : 'nav-btn'}
+            >
+              💬 Chat
+            </button>
+            <button
+              onClick={() => setCurrentView('financial')}
+              className={currentView === 'financial' ? 'nav-btn active' : 'nav-btn'}
+            >
+              💰 Financial Advisor
+            </button>
           </div>
         </div>
       </nav>
 
       <main className="main-content">
-        {selectedModel && <LearningAI modelId={selectedModel} />}
+        {selectedModel && currentView === 'chat' && (
+          <LearningAI modelId={selectedModel} />
+        )}
+        {selectedModel && currentView === 'financial' && (
+          <FinancialAdvisor modelId={selectedModel} />
+        )}
       </main>
     </div>
   );

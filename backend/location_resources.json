@@ -1,0 +1,139 @@
+{
+  "Athens, GA": {
+    "credit_unions": [
+      {
+        "name": "Georgia United Credit Union",
+        "website": "https://www.gucu.org",
+        "phone": "(706) 548-0181",
+        "services": ["Student loans", "Secured credit cards", "Financial counseling"],
+        "notes": "Specializes in UGA students and faculty"
+      },
+      {
+        "name": "Georgia's Own Credit Union",
+        "website": "https://www.georgiasown.org",
+        "phone": "(800) 533-2062",
+        "services": ["Auto loans", "Personal loans", "Credit building"]
+      }
+    ],
+    "counseling_centers": [
+      {
+        "name": "UGA Love & Money Center",
+        "location": "Tate Student Center, Room 449",
+        "website": "https://dos.uga.edu/love-money",
+        "phone": "(706) 542-7774",
+        "services": ["Free financial counseling", "Budget planning", "Debt management"],
+        "hours": "Monday-Friday 9AM-5PM"
+      }
+    ],
+    "state_programs": [
+      {
+        "name": "Georgia HOPE Scholarship",
+        "website": "https://gsfc.georgia.gov/hope",
+        "description": "Merit-based scholarship for Georgia residents",
+        "eligibility": "3.0 GPA or higher for high school students"
+      },
+      {
+        "name": "Georgia Student Finance Commission",
+        "website": "https://gsfc.georgia.gov",
+        "services": ["Student loans", "Financial aid", "Scholarship programs"]
+      }
+    ],
+    "cost_of_living": {
+      "average_rent_1br": "$1,200",
+      "average_rent_2br": "$1,500",
+      "monthly_expenses": "$2,400",
+      "food_monthly": "$350",
+      "transportation": "$150",
+      "utilities": "$120"
+    },
+    "tax_info": {
+      "state_income_tax": "1% - 5.75%",
+      "sales_tax": "7%",
+      "property_tax": "~1% of home value"
+    }
+  },
+  "Atlanta, GA": {
+    "credit_unions": [
+      {
+        "name": "Delta Community Credit Union",
+        "website": "https://www.deltacommunitycu.com",
+        "phone": "(800) 544-3328",
+        "services": ["Personal loans", "Home loans", "Credit cards"],
+        "notes": "Largest credit union in Georgia"
+      },
+      {
+        "name": "Georgia's Own Credit Union",
+        "website": "https://www.georgiasown.org",
+        "phone": "(800) 533-2062",
+        "services": ["Auto loans", "Personal loans", "Student refinancing"]
+      }
+    ],
+    "counseling_centers": [
+      {
+        "name": "Consumer Credit Counseling Service of Atlanta",
+        "website": "https://www.cccsstl.org",
+        "phone": "(404) 527-7630",
+        "services": ["Debt management", "Credit counseling", "Budget planning"],
+        "hours": "Monday-Friday 8AM-5PM"
+      }
+    ],
+    "state_programs": [
+      {
+        "name": "Georgia HOPE Scholarship",
+        "website": "https://gsfc.georgia.gov/hope",
+        "description": "Merit-based scholarship for Georgia residents"
+      }
+    ],
+    "cost_of_living": {
+      "average_rent_1br": "$1,800",
+      "average_rent_2br": "$2,200",
+      "monthly_expenses": "$3,500",
+      "food_monthly": "$450",
+      "transportation": "$250",
+      "utilities": "$150"
+    },
+    "tax_info": {
+      "state_income_tax": "1% - 5.75%",
+      "sales_tax": "8.9%",
+      "property_tax": "~1% of home value"
+    }
+  },
+  "New York, NY": {
+    "credit_unions": [
+      {
+        "name": "Affinity Federal Credit Union",
+        "website": "https://www.affinity.org",
+        "phone": "(800) 325-0808",
+        "services": ["Personal loans", "Credit cards", "Financial planning"]
+      }
+    ],
+    "counseling_centers": [
+      {
+        "name": "Financial Empowerment Centers",
+        "website": "https://www1.nyc.gov/site/dca/consumers/get-free-financial-counseling.page",
+        "phone": "311",
+        "services": ["Free one-on-one financial counseling", "Credit building", "Debt management"]
+      }
+    ],
+    "state_programs": [
+      {
+        "name": "NYS Higher Education Services Corporation",
+        "website": "https://www.hesc.ny.gov",
+        "services": ["Tuition Assistance Program", "Student loans"]
+      }
+    ],
+    "cost_of_living": {
+      "average_rent_1br": "$3,500",
+      "average_rent_2br": "$4,500",
+      "monthly_expenses": "$6,000",
+      "food_monthly": "$600",
+      "transportation": "$150",
+      "utilities": "$200"
+    },
+    "tax_info": {
+      "state_income_tax": "4% - 10.9%",
+      "city_income_tax": "3.078% - 3.876%",
+      "sales_tax": "8.875%"
+    }
+  }
+}
